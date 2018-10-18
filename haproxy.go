@@ -19,9 +19,9 @@ type HaproxyReader struct {
 }
 
 func parseHaproxyTime(timeLocal string) time.Time {
-	t, err := time.Parse(haProxyTsLayout, timeLocal)
+	t, _ := time.Parse(haProxyTsLayout, timeLocal)
 
-	checkErr(err)
+	//checkErr(err)
 
 	return t
 }
@@ -34,8 +34,8 @@ func parseStringInto(s string, entry *LogEntry) error {
 		return fmt.Errorf("Issue with date indexes, start: %d, end: %d, len: %d", dateStartI, dateEndI, len(s))
 	}
 
-	requestStartI := strings.Index(s, `"`) + 1
-	requestEndI := len(s) - 1
+	requestStartI := strings.Index(s, `] GET `) + 5
+	requestEndI := strings.Index(s, "HTTP/")
 
 	if requestStartI > requestEndI || requestStartI > len(s) || requestEndI > len(s) {
 		return fmt.Errorf("Issue with request indexes, start: %d, end: %d, len: %d", requestStartI, requestEndI, len(s))
